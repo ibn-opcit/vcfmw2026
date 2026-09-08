@@ -12,15 +12,14 @@ Runs on the Atari 800XL.
 ### Notes and troubleshooting
 
 - The S-Drive should have the following mapping:
-    - D1: SpartaDOS
+    - D1: A8SPARTA
     - D2: A8DAT
     - D3: A8MNIST
-- Reconstruct if necessary. There should be a stylus floating around for dealing with the tiny touchscreen.
+- Reconstruct if necessary using on-screen UI. There should be a stylus floating around for dealing with the tiny touchscreen.
 
 ## From DOS
 
-- `D3`
-- `A8MNIST.XEX`
+- `D3:A8MNIST`
 
 
 ### Notes and troubleshooting
@@ -28,8 +27,10 @@ Runs on the Atari 800XL.
 - Left side of screen shows a (binarized) 28 x 28 digit image (either from the MNIST test set or drawn by the user)
 - Right side shows a crude confidence meter for the inference 0-9 (left to right)
 - Default behavior is "demo mode," where the machine picks a random image from the collection on D2
-- Interrupt this at any time by drawing on the pad (hold down the left button as you draw)
+- Interrupt this at any time by pressing a key that is not `C` or `D` (modulo one evaluation). You are now in drawing mode.
+- Hold down the left tablet button while sketching. Inference commences when the button is released.
 - Following an inference, resume demo mode with `D`, or press any other key to draw another digit
+- You can recalibrate the pad by pressing `C` (not generally needed)
 
 
 ## Making changes
@@ -44,4 +45,4 @@ Runs on the Atari 800XL.
         - You can drag-and-drop files from Windows into the Explore Disk window in Altirra
     - To build, make sure `cc65` is on your path and run `./build.sh` from the `a8mnist` directory
     - Outputs `a8mnist.xex` executable
-    - Run in emulator and/or deploy
+    - Run in emulator and/or deploy. If deploying, rename to `A8MNIST.COM`

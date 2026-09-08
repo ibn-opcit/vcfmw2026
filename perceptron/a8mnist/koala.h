@@ -6,14 +6,14 @@
 #define KOALA_PORT_Y   1   /* PADDL1 */
 #define KOALA_TRIG     0   /* STRIG0, port 0/1 share one trigger line */
 
-//#define PADDL_BASE     0x0270   /* PADDL0..PADDL7 */
+#define PADDL_BASE_SHADOW     0x0270   /* PADDL0..PADDL7 */
 #define PADDL_BASE     0xD200   /* PADDL0..PADDL7 */
 #define STRIG_BASE     0x027A   /* STRIG0/STRIG1 shadow */
 
 
 typedef struct {
     unsigned char raw_x, raw_y;
-    unsigned char touching;   /* 1 = stylus pressed */
+    unsigned char left_button_down, right_button_down;
 } KoalaSample;
 
 /* Calibration - fill these in via a one-time calibration pass */

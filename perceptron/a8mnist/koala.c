@@ -5,11 +5,15 @@
 
 void koala_read(KoalaSample *s) {
     //s->raw_x    = PEEK(PADDL_BASE + KOALA_PORT_X);
-    s->raw_x  = (*(unsigned char*)(PADDL_BASE + KOALA_PORT_X));
+    s->raw_x  = (*(unsigned char*)(PADDL_BASE_SHADOW + KOALA_PORT_X));
     //s->raw_y    = PEEK(PADDL_BASE + KOALA_PORT_Y);
-    s->raw_y = (*(unsigned char*)(PADDL_BASE + KOALA_PORT_Y));
-    s->touching = (unsigned char)((PEEK(STRIG_BASE + KOALA_TRIG) & 0x04) == 0);
-    //printf("b %d, %d, %d, %d\n", s->raw_x, s->raw_y, s->touching, PEEK(STRIG_BASE + KOALA_TRIG));
+    s->raw_y = (*(unsigned char*)(PADDL_BASE_SHADOW + KOALA_PORT_Y));
+    s->left_button_down = (unsigned char)((PEEK(STRIG_BASE + KOALA_TRIG) & 0x04) == 0);
+    s->right_button_down = (unsigned char)((PEEK(STRIG_BASE + KOALA_TRIG) & 0x08) == 0);
+    /*printf("b %d, %d, %d, %d (%d, %d)\n", s->raw_x, s->raw_y, s->left_button_down, 
+        PEEK(STRIG_BASE + KOALA_TRIG), 
+        PEEK(PADDL_BASE + KOALA_PORT_X),
+        PEEK(PADDL_BASE + KOALA_PORT_Y));*/
 }
 
 /* Map raw pot value to canvas pixel coord, with calibration + clamping */
@@ -24,18 +28,18 @@ int koala_scale(unsigned char raw, unsigned char lo, unsigned char hi,
 
 void koala_calibrate(KoalaCal *c) {
     KoalaSample s;
-    printf("Touch TOP-LEFT corner, hold still, press trigger\n");
-    do { koala_read(&s); } while (!s.touching);
+    printf("Touch TOP-LEFT corner, hold still, press left button\n");
+    do { koala_read(&s); } while (!s.left_button_down);
     c->x_min = s.raw_x; c->y_min = s.raw_y;
     printf("ul %d, %d\n", s.raw_x, s.raw_y);
-    do { koala_read(&s); } while (s.touching);
+    do { koala_read(&s); } while (s.left_button_down);
 
-    printf("Touch BOTTOM-RIGHT corner, hold still, press trigger\n");
-    do { koala_read(&s); } while (!s.touching);
+    printf("Touch BOTTOM-RIGHT corner, hold still, press left button\n");
+    do { koala_read(&s); } while (!s.left_button_down);
     c->x_max = s.raw_x; c->y_max = s.raw_y;
     printf("lr %d, %d\n", s.raw_x, s.raw_y);
 
-    do { koala_read(&s); } while (s.touching);
+    do { koala_read(&s); } while (s.left_button_down);
 
     /* handle pads that report inverted axes */
     if (c->x_min > c->x_max) { unsigned char t=c->x_min; c->x_min=c->x_max; c->x_max=t; c->invert_x=1; }
